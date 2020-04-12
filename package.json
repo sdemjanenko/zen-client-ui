@@ -1,0 +1,61 @@
+{
+  "name": "@rogueg/zen-client-ui",
+  "version": "0.0.1",
+  "description": "Karma replacement that runs your tests in seconds",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogueg/zen.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rogueg/zen/issues"
+  },
+  "homepage": "https://github.com/rogueg/zen#readme",
+  "main": "./bin/run",
+  "bin": {
+    "zen": "./bin/run"
+  },
+  "scripts": {
+    "example": "(cd example && node --inspect ../lib/index.js zen.js)",
+    "test": "echo \"Ironic: no test specified\" && exit 1",
+    "test:ui": "./bin/run local",
+    "bundle-fn": "(rm -f tmp/lambda-code.zip && cd tmp/lambda-code && zip -r ../lambda-code.zip *)",
+    "bundle-layer": "(rm -f tmp/layer-chrome.zip && cd tmp/layer/ && zip -r ../layer-chrome.zip *)",
+    "snowpack": "snowpack --include \"src/**/*.svelte\""
+  },
+  "files": [
+    "/package-lock.json",
+    "/src"
+  ],
+  "snowpack": {
+    "webDependencies": [
+      "fuzzysort"
+    ]
+  },
+  "dependencies": {
+    "aws-sdk": "^2.238.1",
+    "btoa": "^1.2.1",
+    "chrome-launcher": "^0.13.0",
+    "chrome-remote-interface": "^0.28.1",
+    "connect": "^3.6.1",
+    "del": "^5.1.0",
+    "fuzzysort": "^1.1.4",
+    "klaw": "^2.1.1",
+    "mime-types": "^2.1.17",
+    "serve-static": "^1.12.2",
+    "sugar": "^2.0.4",
+    "uuid": "^3.3.2",
+    "ws": "^3.1.0"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.22.2",
+    "@rollup/plugin-virtual": "^2.0.0",
+    "chai": "^3.5.0",
+    "globby": "^10.0.2",
+    "node-fetch": "^2.3.0",
+    "rollup": "^2.2.0",
+    "svelte": "^3.0.0",
+    "snowpack": "^1.6.0"
+  }
+}
