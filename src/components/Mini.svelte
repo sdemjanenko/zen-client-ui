@@ -1,10 +1,21 @@
 <script>
-  const store = Zen.store
-  const focusGroup = Zen.actions.focusGroup
-  const focusTest = Zen.actions.focusTest
+  import { getContext } from 'svelte'
+  import { key } from '../store/index'
+  import {
+    failureGroups as failureGroupsCreator,
+    groupForFocus as groupForFocusCreator,
+  } from '../store/derived'
+
+  const { getStore } = getContext(key)
+  const store = getStore()
+
+
+  const focusGroup = () => {} //Zen.actions.focusGroup
+  const focusTest = () => {} //Zen.actions.focusTest
+
   let expandedGroup
-  let failureGroups = Zen.computed.failureGroups
-  let groupForFocus = Zen.computed.groupForFocus
+  let failureGroups = failureGroupsCreator(store)
+  let groupForFocus = groupForFocusCreator(store)
 
   function groupClasses (g) {
     let s = 'failureGroup'

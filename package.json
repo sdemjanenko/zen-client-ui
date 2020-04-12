@@ -17,15 +17,14 @@
     "zen": "./bin/run"
   },
   "scripts": {
-    "example": "(cd example && node --inspect ../lib/index.js zen.js)",
-    "test": "echo \"Ironic: no test specified\" && exit 1",
-    "test:ui": "./bin/run local",
-    "bundle-fn": "(rm -f tmp/lambda-code.zip && cd tmp/lambda-code && zip -r ../lambda-code.zip *)",
-    "bundle-layer": "(rm -f tmp/layer-chrome.zip && cd tmp/layer/ && zip -r ../layer-chrome.zip *)",
-    "snowpack": "snowpack --include \"src/**/*.svelte\""
+    "start": "es-dev-server --app-index src/index.html --node-resolve --watch --open",
+    "snowpack": "snowpack --include \"src/**/*.js\"",
+    "dev": "svelvet",
+    "build": "NODE_ENV=production svelvet"
   },
   "files": [
     "/package-lock.json",
+    "/web_modules",
     "/src"
   ],
   "snowpack": {
@@ -52,10 +51,12 @@
     "@oclif/dev-cli": "^1.22.2",
     "@rollup/plugin-virtual": "^2.0.0",
     "chai": "^3.5.0",
+    "es-dev-server": "^1.46.1",
     "globby": "^10.0.2",
     "node-fetch": "^2.3.0",
     "rollup": "^2.2.0",
+    "snowpack": "^1.6.0",
     "svelte": "^3.0.0",
-    "snowpack": "^1.6.0"
+    "svelvet": "^0.4.1"
   }
 }

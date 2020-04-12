@@ -1,11 +1,15 @@
+import { get } from 'svelte/store'
 import {
   mergeValue,
-} from './store.js'
+} from '../store/index'
+
+// used for Svelte context
+export const key = {}
 
 // Run one test in this tab so you can debug it
-export function focusTest(name) {
-  name = name === undefined ? Zen.get(Zen.store).focus : name
-  Zen.store.update(mergeValue({focus: name}))
+export function focusTest(store, name) {
+  name = name === undefined ? get(store).focus : name
+  store.update(mergeValue({focus: name}))
   let test = Latte.flatten().find(t => t.fullName === name)
 
   // Update the url if needed
@@ -17,13 +21,13 @@ export function focusTest(name) {
 
   if (!name || !test) return
 
-  Zen.store.update(mergeValue({focusStatus: 'running'}))
+  store.update(mergeValue({focusStatus: 'running'}))
   Latte.run([test])
 }
 
-export function filterTests(opts={}) {
-  let grep = (opts.hasOwnProperty('grep') ? opts.grep : Zen.get(Zen.store).grep) || ''
-  Zen.store.update(mergeValue({grep}))
+export function filterTests(store, opts={}) {
+  let grep = (opts.hasOwnProperty('grep') ? opts.grep : get(store).grep) || ''
+  store.update(mergeValue({grep}))
 
   // Update the url if we're changing grep or focus
   let sp = new URLSearchParams(location.search)
@@ -40,20 +44,22 @@ export function filterTests(opts={}) {
 }
 
 export function closeCommand() {
+  /*
   if (Zen.command) {
     Zen.command.$destroy()
     Zen.command = null
   }
+  */
 }
 
-export function focusGroup(group) {
+export function focusGroup(store, failureGroups, group) {
   if (typeof group === 'number') {
-    let failureGroups = Zen.get(Zen.computed.failureGroups)
-    let index = failureGroups.findIndex(g => g.containsFocus)
-    group = failureGroups[index + group] || failureGroups[0]
+    let groups = get(failureGroups)
+    let index = groups.findIndex(g => g.containsFocus)
+    group = groups[index + group] || groups[0]
   }
 
   if (group && group[0]) {
-    focusTest(group[0].fullName)
+    focusTest(store, group[0].fullName)
   }
 }

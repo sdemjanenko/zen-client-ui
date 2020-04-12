@@ -7,6 +7,9 @@ import {
   groupForFocus,
 } from './store.js'
 import * as actions from './actions.js'
+import './index'
+import './latte'
+import Mini from './components/Mini.svelte'
 
 const {
   focusTest,
@@ -35,7 +38,7 @@ Zen.computed = {
 window.addEventListener('load', () => {
   Latte.onTest = onTestFinished
 
-  Zen.mini = new Zen.Mini({target: document.querySelector('body'), store})
+  Zen.mini = new Mini({target: document.querySelector('body'), store})
   Zen.socket = new WebSocket(`ws://${location.host}/head`)
   Zen.socket.onopen = () => onUrlChange()
   Zen.socket.onmessage = serverMessage

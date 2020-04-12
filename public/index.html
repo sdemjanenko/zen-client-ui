@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <div id="app"></div>
+
+    <script type="module">
+      // If you have a component named src/App.svelte, it will get
+      // compiled to public/dist/App.js
+      import App from '/dist/App.js';
+
+      new App({
+        target: document.querySelector('#app'),
+      });
+    </script>
+  </body>
+</html>

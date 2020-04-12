@@ -1,24 +1,8 @@
 import {
-  writable,
   derived,
 } from 'svelte/store'
 
-export const store = writable({
-  results: [],
-  focus: null,
-  focusStatus: 'none',
-  compile: { errors: [] },
-  // passedFocus: null,
-  icons: {},
-})
-
-export function mergeValue(hash) {
-  return function(val) {
-    return {...val, ...hash}
-  }
-}
-
-export const failureGroups = derived(store, ({results, focus, passedFocus}) => {
+export const failureGroups = (store) => derived(store, ({results, focus, passedFocus}) => {
   let groups = {}
   results.forEach(t => {
     if (!t.error) return
@@ -38,10 +22,10 @@ export const failureGroups = derived(store, ({results, focus, passedFocus}) => {
   }).sort((a, b) => b.length - a.length)
 })
 
-export const groupForFocus = derived(failureGroups, (groups) => groups.find(g => g.containsFocus) || [])
+export const groupForFocus = (store) => derived(failureGroups(store), (groups) => groups.find(g => g.containsFocus) || [])
 
 // Figure out the set of sets that were run together when the focused test failed
-export const batchForFocus = derived(store, ({results, focus}) => {
+export const batchForFocus = (store) => derived(store, ({results, focus}) => {
   let focusedResult = results.find(r => r.fullName === focus)
   if (!focusedResult) return [{fullName: focus}]
   return results

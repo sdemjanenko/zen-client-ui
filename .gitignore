@@ -10,3 +10,4 @@ serverless/.serverless
 /dist
 /tmp
 .zen
+public/dist
