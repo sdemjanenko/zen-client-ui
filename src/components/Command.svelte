@@ -5,7 +5,6 @@
   import Icon from './Icon'
   import { key } from '../store/index'
   import {
-    closeCommand,
     filterTests,
     focusTest,
     focusGroup,
@@ -32,7 +31,9 @@
   $: searchNodes = prepareSearch()
 
   onMount(() => {
-    prompt.focus()
+    if (prompt) {
+      prompt.focus()
+    }
   })
 
   const Latte = {}
@@ -168,6 +169,32 @@
       return searchNodes.slice(0, 50)
     }
   }
+
+  let open = false;
+  function closeCommand() {
+    open = false
+  }
+
+  let onlyAlt;
+  export function handleKeyDown(ev) {
+    if (!ev.altKey || ev.shiftKey || ev.metaKey || ev.ctrlKey) return // only consider keys with just alt
+    onlyAlt = ev.keyCode == 18
+    let command = commands.find(c => c.keyCode === ev.keyCode)
+    if (command && (!command.condition || command.condition())) {
+      ev.preventDefault()
+      command.action()
+      open = false
+      onlyAlt = false
+    }
+  }
+
+  export function handleKeyUp(ev) {
+    let altUp = ev.keyCode == 18 && !ev.shiftKey && !ev.metaKey && !ev.ctrlKey
+    if (altUp && onlyAlt) {
+      open = !open
+    }
+    onlyAlt = false
+  }
 </script>
 
 <style>
@@ -244,23 +271,30 @@
   }
 </style>
 
+<svelte:window
+  on:keydown={handleKeyDown}
+  on:keyup={handleKeyUp}
+/>
+
 <div class='ZenCommand'>
-  <input bind:value='{input}' bind:this='{prompt}' on:blur='{() => closeCommand()}' on:keydown='{(event) => onKeyDown(event)}' on:input='{() => setSelected(0)}' />
-  <div bind:this='{list}' class='suggestions'>
-    {#each suggestions as suggestion, index}
-      <div class="{index == selectedIndex ? 'selected' : ''}" title='{altText(suggestion)}' on:click='{() => takeAction(index)}'>
-        <span class='icon'>
-          <Icon type={icon(suggestion)} height={20} width={20} />
-        </span>
-        <span class='title'>{suggestion.title}</span>
-        {#if suggestion.key}
-          <div class='keys'>
-            {#each suggestion.key.split(' ') as k}
-              <span>{k}</span>
-            {/each}
-          </div>
-        {/if}
-      </div>
-    {/each}
-  </div>
+  {#if open}
+    <input bind:value='{input}' bind:this='{prompt}' on:blur='{() => closeCommand()}' on:keydown='{(event) => onKeyDown(event)}' on:input='{() => setSelected(0)}' />
+    <div bind:this='{list}' class='suggestions'>
+      {#each suggestions as suggestion, index}
+        <div class="{index == selectedIndex ? 'selected' : ''}" title='{altText(suggestion)}' on:click='{() => takeAction(index)}'>
+          <span class='icon'>
+            <Icon type={icon(suggestion)} height={20} width={20} />
+          </span>
+          <span class='title'>{suggestion.title}</span>
+          {#if suggestion.key}
+            <div class='keys'>
+              {#each suggestion.key.split(' ') as k}
+                <span>{k}</span>
+              {/each}
+            </div>
+          {/if}
+        </div>
+      {/each}
+    </div>
+  {/if}
 </div>
