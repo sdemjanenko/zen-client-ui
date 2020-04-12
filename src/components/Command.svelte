@@ -13,6 +13,10 @@
     failureGroups as failureGroupsCreator,
     groupForFocus as groupForFocusCreator,
   } from '../store/derived'
+  import {
+    altKeyDownPreventDefault,
+    altKeyUpPreventDefault,
+  } from '../utils'
 
   const { getStore } = getContext(key)
   const store = getStore()
@@ -22,7 +26,7 @@
 
   let input = ''
   let prompt
-  export let list
+  let list
   let selectedIndex = 0
   export let suggestions
   $: suggestions = suggestionsForInput(input)
@@ -101,7 +105,19 @@
     return nodes
   }
 
-  export function onKeyDown(event) {
+  export function handleKeyUp(event) {
+    let onlyAlt = altKeyUpPreventDefault(event)
+    if (onlyAlt) {
+      closeCommand()
+    }
+  }
+
+  export function handleKeyDown(event) {
+    altKeyDownPreventDefault(event)
+    if (event.altKey) {
+      event.preventDefault()
+    }
+
     event.stopPropagation()
     if (_isUpKey(event))
       setSelected(selectedIndex - 1)
@@ -115,15 +131,15 @@
     event.preventDefault()
   }
 
-  export function _isUpKey ({keyCode, key, metaKey, altKey, ctrlKey} = {}) {
+  function _isUpKey ({keyCode, key, metaKey, altKey, ctrlKey} = {}) {
     return keyCode == 38 || (!metaKey && !altKey && ctrlKey && ['p', 'k'].includes(key))
   }
 
-  export function _isDownKey ({keyCode, key, metaKey, altKey, ctrlKey} = {}) {
+  function _isDownKey ({keyCode, key, metaKey, altKey, ctrlKey} = {}) {
     return keyCode == 40 || (!metaKey && !altKey && ctrlKey && ['n', 'j'].includes(key))
   }
 
-  export function _isEscapeKey ({keyCode, key, metaKey, altKey, ctrlKey} = {}) {
+  function _isEscapeKey ({keyCode, key, metaKey, altKey, ctrlKey} = {}) {
     return keyCode == 27 || (!metaKey && !altKey && ctrlKey && key == '[')
   }
 
@@ -170,31 +186,19 @@
     }
   }
 
-  let open = false;
-  function closeCommand() {
-    open = false
-  }
+  export let closeCommand;
 
-  let onlyAlt;
+/*
   export function handleKeyDown(ev) {
     if (!ev.altKey || ev.shiftKey || ev.metaKey || ev.ctrlKey) return // only consider keys with just alt
-    onlyAlt = ev.keyCode == 18
     let command = commands.find(c => c.keyCode === ev.keyCode)
     if (command && (!command.condition || command.condition())) {
       ev.preventDefault()
       command.action()
-      open = false
-      onlyAlt = false
+      closeCommand()
     }
   }
-
-  export function handleKeyUp(ev) {
-    let altUp = ev.keyCode == 18 && !ev.shiftKey && !ev.metaKey && !ev.ctrlKey
-    if (altUp && onlyAlt) {
-      open = !open
-    }
-    onlyAlt = false
-  }
+  */
 </script>
 
 <style>
@@ -271,30 +275,34 @@
   }
 </style>
 
-<svelte:window
-  on:keydown={handleKeyDown}
-  on:keyup={handleKeyUp}
-/>
-
 <div class='ZenCommand'>
-  {#if open}
-    <input bind:value='{input}' bind:this='{prompt}' on:blur='{() => closeCommand()}' on:keydown='{(event) => onKeyDown(event)}' on:input='{() => setSelected(0)}' />
-    <div bind:this='{list}' class='suggestions'>
-      {#each suggestions as suggestion, index}
-        <div class="{index == selectedIndex ? 'selected' : ''}" title='{altText(suggestion)}' on:click='{() => takeAction(index)}'>
-          <span class='icon'>
-            <Icon type={icon(suggestion)} height={20} width={20} />
-          </span>
-          <span class='title'>{suggestion.title}</span>
-          {#if suggestion.key}
-            <div class='keys'>
-              {#each suggestion.key.split(' ') as k}
-                <span>{k}</span>
-              {/each}
-            </div>
-          {/if}
-        </div>
-      {/each}
-    </div>
-  {/if}
+  <input
+    bind:value={input}
+    bind:this={prompt}
+    on:blur={() => closeCommand()}
+    on:keydown={handleKeyDown}
+    on:keyup={handleKeyUp}
+    on:input={() => setSelected(0)}
+  />
+  <div bind:this='{list}' class='suggestions'>
+    {#each suggestions as suggestion, index}
+      <div
+        class="{index == selectedIndex ? 'selected' : ''}"
+        title='{altText(suggestion)}'
+        on:click='{() => takeAction(index)}'
+      >
+        <span class='icon'>
+          <Icon type={icon(suggestion)} height={20} width={20} />
+        </span>
+        <span class='title'>{suggestion.title}</span>
+        {#if suggestion.key}
+          <div class='keys'>
+            {#each suggestion.key.split(' ') as k}
+              <span>{k}</span>
+            {/each}
+          </div>
+        {/if}
+      </div>
+    {/each}
+  </div>
 </div>

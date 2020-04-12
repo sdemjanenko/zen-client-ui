@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "es-dev-server --app-index src/index.html --node-resolve --watch --open",
-    "snowpack": "snowpack --include \"src/**/*.js\"",
+    "snowpack": "snowpack --include \"src/**/*.{js,svelte}\"",
     "dev": "svelvet",
     "build": "NODE_ENV=production svelvet"
   },
@@ -28,9 +28,6 @@
     "/src"
   ],
   "snowpack": {
-    "webDependencies": [
-      "fuzzysort"
-    ]
   },
   "dependencies": {
     "aws-sdk": "^2.238.1",
