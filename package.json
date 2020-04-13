@@ -1,7 +1,7 @@
 {
   "name": "@rogueg/zen-client-ui",
   "version": "0.0.1",
-  "description": "Karma replacement that runs your tests in seconds",
+  "description": "Client UI for Zen",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rogueg/zen.git"
@@ -12,46 +12,19 @@
     "url": "https://github.com/rogueg/zen/issues"
   },
   "homepage": "https://github.com/rogueg/zen#readme",
-  "main": "./bin/run",
-  "bin": {
-    "zen": "./bin/run"
-  },
+  "main": "./public/index.html",
   "scripts": {
-    "start": "es-dev-server --app-index src/index.html --node-resolve --watch --open",
     "snowpack": "snowpack --include \"src/**/*.{js,svelte}\"",
     "dev": "svelvet",
     "build": "NODE_ENV=production svelvet"
   },
   "files": [
-    "/package-lock.json",
-    "/web_modules",
-    "/src"
+    "/public"
   ],
-  "snowpack": {
-  },
   "dependencies": {
-    "aws-sdk": "^2.238.1",
-    "btoa": "^1.2.1",
-    "chrome-launcher": "^0.13.0",
-    "chrome-remote-interface": "^0.28.1",
-    "connect": "^3.6.1",
-    "del": "^5.1.0",
-    "fuzzysort": "^1.1.4",
-    "klaw": "^2.1.1",
-    "mime-types": "^2.1.17",
-    "serve-static": "^1.12.2",
-    "sugar": "^2.0.4",
-    "uuid": "^3.3.2",
-    "ws": "^3.1.0"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1.22.2",
-    "@rollup/plugin-virtual": "^2.0.0",
-    "chai": "^3.5.0",
-    "es-dev-server": "^1.46.1",
-    "globby": "^10.0.2",
-    "node-fetch": "^2.3.0",
-    "rollup": "^2.2.0",
+    "fuzzysort": "^1.1.4",
     "snowpack": "^1.6.0",
     "svelte": "^3.0.0",
     "svelvet": "^0.4.1"
