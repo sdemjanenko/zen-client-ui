@@ -16,7 +16,7 @@
   import {
     altKeyDownPreventDefault,
     altKeyUpPreventDefault,
-  } from '../utils'
+  } from '../utils/altKey'
 
   const { getStore } = getContext(key)
   const store = getStore()

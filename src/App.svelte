@@ -8,7 +8,7 @@
   import {
     altKeyDownPreventDefault,
     altKeyUpPreventDefault,
-  } from './utils'
+  } from './utils/altKey'
   import {
     init as initSocket,
   } from './api/websocket'
