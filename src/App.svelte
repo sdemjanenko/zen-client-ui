@@ -3,12 +3,18 @@
   import Command from './components/Command'
   import Icon from './components/Icon'
 
-  import { setContext } from 'svelte'
+  import { onMount, setContext } from 'svelte'
   import { store, key } from './store/index'
   import {
     altKeyDownPreventDefault,
     altKeyUpPreventDefault,
   } from './utils'
+  import {
+    init as initSocket,
+  } from './api/websocket'
+  import {
+    getConfig,
+  } from './api/index'
 
   setContext(key, {
     getStore: () => store,
@@ -30,6 +36,13 @@
       open = !open
     }
   }
+
+  onMount(async () => {
+    console.log("MOUNTING APP")
+    initSocket(store);
+    const config = await getConfig()
+    console.log("config", config)
+  })
 </script>
 
 <svelte:window
