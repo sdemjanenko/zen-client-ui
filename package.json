@@ -27,7 +27,7 @@
   "devDependencies": {
     "fuzzysort": "^1.1.4",
     "snowpack": "^1.6.0",
-    "svelte": "^3.0.0",
+    "svelte": "^3.49.0",
     "svelvet": "^0.4.1"
   }
 }
